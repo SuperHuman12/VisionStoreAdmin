@@ -8,7 +8,7 @@
     <color name="colorSecondary">#00838f</color>
     <color name="colorSecondaryDark">#4fb3bf</color>
     <color name="colorSecondaryLight">#005662</color>
+    <color name="colorAccent">#005662</color>
 
-    <color name="textColor">#ffffff</color>
 
 </resources>
