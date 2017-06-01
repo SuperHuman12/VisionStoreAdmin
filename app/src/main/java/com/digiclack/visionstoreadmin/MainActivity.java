@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.digiclack.visionstoreadmin.Fragments.navigationActivity.ContentLensesFragment;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         HomeFragment fragment = new HomeFragment();
+        ContentLensesFragment lensesFragment=new ContentLensesFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)

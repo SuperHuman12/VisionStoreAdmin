@@ -33,13 +33,20 @@ public class ProductAdapter extends ArrayAdapter<Product> {
                     R.layout.grid_single_item, parent, false);
         }
         Product item=getItem(position);
-        ImageView pImage= (ImageView) gridItemView.findViewById(R.id.grid_image_product);
-        TextView pName= (TextView) gridItemView.findViewById(R.id.txt_p_name);
-        TextView pPrice= (TextView) gridItemView.findViewById(R.id.txt_p_price);
-        pImage.setImageResource(item.getpImage());
-        pName.setText(item.getpBrand()+" "+item.getpModelName());
-        pPrice.setText("Rs. "+item.getpPrice());
+        ViewHolder holder=new ViewHolder();
+        holder.pImage= (ImageView) gridItemView.findViewById(R.id.grid_image_product);
+        holder.pName= (TextView) gridItemView.findViewById(R.id.txt_p_name);
+        holder.pPrice= (TextView) gridItemView.findViewById(R.id.txt_p_price);
+        holder.pImage.setImageResource(item.getpImage());
+        holder.pName.setText(item.getpBrand()+" "+item.getpModelName());
+        holder.pPrice.setText("Rs. "+item.getpPrice());
 
         return gridItemView;
+    }
+
+    static class ViewHolder {
+        ImageView pImage;
+        TextView pName;
+        TextView pPrice;
     }
 }

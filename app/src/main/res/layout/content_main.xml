@@ -8,6 +8,7 @@
     tools:context="com.digiclack.visionstoreadmin.MainActivity"
     tools:showIn="@layout/app_bar_main">
     <ListView
+        android:ellipsize="marquee"
         android:id="@+id/main_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

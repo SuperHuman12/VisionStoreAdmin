@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridView
+        android:id="@+id/frg_transparent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="2"></GridView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
+</RelativeLayout>
