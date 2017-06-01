@@ -11,4 +11,5 @@
     <dimen name="design_navigation_icon_size">40dp</dimen>
     <dimen name="margin_10dp">10dp</dimen>
     <dimen name="marginTop_60dp">60dp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
 </resources>
