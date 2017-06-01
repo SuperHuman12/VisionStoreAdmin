@@ -3,33 +3,33 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_lenses"
+            android:icon="@mipmap/ic_nav_lenses"
+            android:title="Contact Lenses" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_eye_glasses"
+            android:icon="@mipmap/ic_nav_eye_glasses"
+            android:title="Eye Glasses" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_sunglasses"
+            android:icon="@mipmap/ic_nav_sunglasses"
+            android:title="Sun Glasses" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_orders"
+            android:icon="@mipmap/ic_nav_orders"
+            android:title="Order" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_rate_us"
+                android:icon="@mipmap/ic_nav_rate"
+                android:title="Rate us" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_contact_us"
+                android:icon="@mipmap/ic_nav_contact"
+                android:title="Contact us" />
         </menu>
     </item>
 
