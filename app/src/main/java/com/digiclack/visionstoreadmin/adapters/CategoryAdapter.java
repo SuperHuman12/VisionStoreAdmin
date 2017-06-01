@@ -38,14 +38,20 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                     R.layout.main_list_item, parent, false);
         }
         Category item=getItem(position);
-        TextView txtName= (TextView) listItemView.findViewById(R.id.txt_category);
-        Button seeAll= (Button) listItemView.findViewById(R.id.btn_seeall);
-        GridView gridView= (GridView) listItemView.findViewById(R.id.product_gridview);
-        txtName.setText(item.getcName());
+        ViewHolder holder=new ViewHolder();
+        holder.txtName= (TextView) listItemView.findViewById(R.id.txt_category);
+        holder.seeAll= (Button) listItemView.findViewById(R.id.btn_seeall);
+        holder.gridView= (GridView) listItemView.findViewById(R.id.product_gridview);
+        holder.txtName.setText(item.getcName());
         ArrayList<Product> products=item.getProducts();
         ProductAdapter adapter=new ProductAdapter(getContext(),products);
-        gridView.setAdapter(adapter);
+        holder.gridView.setAdapter(adapter);
 
         return listItemView;
+    }
+    static class ViewHolder {
+        TextView txtName;
+        Button seeAll;
+        GridView gridView;
     }
 }

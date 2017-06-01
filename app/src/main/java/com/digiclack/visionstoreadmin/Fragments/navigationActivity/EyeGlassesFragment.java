@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.digiclack.visionstoreadmin.BaseFragment;
+import com.digiclack.visionstoreadmin.Fragments.navigationActivity.BaseFragment;
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.adapters.PagerAdapter;
 
@@ -65,9 +64,8 @@ public class EyeGlassesFragment extends Fragment {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            setFragmentView(inflater.inflate(R.layout.tab_participation,container,false));
-            TextView tv1 = (TextView) findViewById(R.id.pageText);
-            tv1.setText(getTitle());
+            setFragmentView(inflater.inflate(R.layout.fragment_transparent_lenses,container,false));
+
             return getFragmentView();
         }
     }
@@ -76,20 +74,8 @@ public class EyeGlassesFragment extends Fragment {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            setFragmentView(inflater.inflate(R.layout.tab_metrics, container, false));
-            final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.silidingLayout);
-            Button btn = (Button) findViewById(R.id.btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (linearLayout.getTranslationY() > 0) {
-                        linearLayout.animate().setDuration(500).translationY(0);
-                    } else {
-                        linearLayout.animate().setDuration(500).translationY(500);
+            setFragmentView(inflater.inflate(R.layout.fragment_color_lenses, container, false));
 
-                    }
-                }
-            });
             return getFragmentView();
         }
     }
