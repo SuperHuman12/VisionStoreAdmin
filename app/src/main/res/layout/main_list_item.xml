@@ -41,8 +41,8 @@
             android:layout_below="@+id/btn_seeall"></View>
         <GridView
             android:id="@+id/product_gridview"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:numColumns="2"
             android:layout_below="@id/view"
             android:scrollbars="none"
