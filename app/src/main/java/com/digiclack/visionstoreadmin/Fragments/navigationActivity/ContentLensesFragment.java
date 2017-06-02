@@ -4,12 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+
+import com.digiclack.visionstoreadmin.adapters.CategoryAdapter;
 import com.digiclack.visionstoreadmin.adapters.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
 import com.digiclack.visionstoreadmin.R;
+import com.digiclack.visionstoreadmin.model.Category;
+import com.digiclack.visionstoreadmin.model.Product;
+
 import java.util.ArrayList;
 
 /**
@@ -48,22 +55,86 @@ public class ContentLensesFragment extends Fragment {
     }
 
     public static class TransparentLenses extends BaseFragment {
+        ListView mCategories;
+        CategoryAdapter mAdapter;
+        ArrayList<Product> mLenseList;
+        ArrayList<Product> mEyeList;
+        ArrayList<Product> mGlassesList;
+        ArrayList<Category> mCategoryList;
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            setFragmentView(inflater.inflate(R.layout.fragment_transparent_lenses,container,false));
+            View view=inflater.inflate(R.layout.fragment_transparent_lenses,container,false);
+            setFragmentView(view);
+            initComponent(view);
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mCategoryList.add(new Category(mLenseList,"Brand1 color"));
+            mCategoryList.add(new Category(mEyeList,"Brand2 color"));
+            mCategoryList.add(new Category(mGlassesList,"Brand3 color"));
+            mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager());
+            mCategories.setAdapter(mAdapter);
 
             return getFragmentView();
+        }
+        public void initComponent(View view) {
+            mCategories= (ListView) view.findViewById(R.id.main_list_view);
+            mCategoryList=new ArrayList<>();
+            mLenseList=new ArrayList<>();
+            mEyeList=new ArrayList<>();
+            mGlassesList=new ArrayList<>();
         }
     }
 
     public static class ColorLenses extends BaseFragment {
+        ListView mCategories;
+        CategoryAdapter mAdapter;
+        ArrayList<Product> mLenseList;
+        ArrayList<Product> mEyeList;
+        ArrayList<Product> mGlassesList;
+        ArrayList<Category> mCategoryList;
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            setFragmentView(inflater.inflate(R.layout.fragment_color_lenses,container,false));
+            View view=inflater.inflate(R.layout.fragment_color_lenses,container,false);
+            setFragmentView(view);
+            initComponent(view);
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+            mCategoryList.add(new Category(mLenseList,"Brand1 transp"));
+            mCategoryList.add(new Category(mEyeList,"Brand2 transp"));
+            mCategoryList.add(new Category(mGlassesList,"Brand3 transp"));
+            mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager());
+            mCategories.setAdapter(mAdapter);
 
             return getFragmentView();
+        }
+        public void initComponent(View view) {
+            mCategories= (ListView) view.findViewById(R.id.main_list_view);
+            mCategoryList=new ArrayList<>();
+            mLenseList=new ArrayList<>();
+            mEyeList=new ArrayList<>();
+            mGlassesList=new ArrayList<>();
         }
     }
 }
