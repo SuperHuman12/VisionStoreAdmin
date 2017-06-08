@@ -9,10 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import com.digiclack.visionstoreadmin.Fragments.navigationActivity.BaseFragment;
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.adapters.PagerAdapter;
 

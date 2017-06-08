@@ -35,19 +35,20 @@ public class HomeFragment extends Fragment {
         mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
         mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
         mLenseList.add(new Product("Nike","786","200",R.drawable.lense));
-        mEyeList.add(new Product("Tag","786","300",R.drawable.eyeglasses));
-        mEyeList.add(new Product("Tag","786","300",R.drawable.eyeglasses));
-        mEyeList.add(new Product("Tag","786","300",R.drawable.eyeglasses));
-        mEyeList.add(new Product("Tag","786","300",R.drawable.eyeglasses));
-        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.sunglasses));
-        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.sunglasses));
-        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.sunglasses));
-        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.sunglasses));
+        mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+        mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+        mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+        mEyeList.add(new Product("Tag","786","300",R.drawable.lense));
+        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
+        mGlassesList.add(new Product("Rayben","007","1000",R.drawable.lense));
         mCategoryList.add(new Category(mLenseList,"Contact Lenses"));
         mCategoryList.add(new Category(mEyeList,"Eye Glasses"));
         mCategoryList.add(new Category(mGlassesList,"Sun Glasses"));
-        mAdapter=new CategoryAdapter(getContext(),mCategoryList);
+        mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager(),"home");
         mCategories.setAdapter(mAdapter);
+
         return view;
     }
     public void initComponent(View view) {
@@ -57,4 +58,5 @@ public class HomeFragment extends Fragment {
         mEyeList=new ArrayList<>();
         mGlassesList=new ArrayList<>();
     }
+
 }

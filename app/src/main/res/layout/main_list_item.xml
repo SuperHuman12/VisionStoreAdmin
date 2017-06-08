@@ -11,9 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/textColor"
-
-
+        android:background="@drawable/list_item_shadow"
+        android:elevation="8dp"
         >
         <TextView
             android:id="@+id/txt_category"
@@ -21,11 +20,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contact Lenses"
+            android:layout_marginLeft="@dimen/margin_10dp"
             android:textColor="@color/textColorTwo"
             android:textSize="@dimen/text_size_18sp"
             />
         <Button
-
+            android:layout_marginRight="@dimen/margin_10dp"
             android:id="@+id/btn_seeall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:background="@color/textColorTwo"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_below="@+id/btn_seeall"></View>
         <GridView
             android:id="@+id/product_gridview"

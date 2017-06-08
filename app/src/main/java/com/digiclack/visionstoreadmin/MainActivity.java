@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.ContentLensesFragment;
+import com.digiclack.visionstoreadmin.Fragments.navigationActivity.EyeGlassesFragment;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -27,11 +28,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         HomeFragment fragment = new HomeFragment();
-        ContentLensesFragment lensesFragment=new ContentLensesFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+                .replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -91,15 +91,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_rate_us) {
+        if (id == R.id.nav_rate_us) {
             // Handle the camera action
         }
         else if(id == R.id.nav_contact_us) {
 
-        }*/
+        }
+        else if (id==R.id.nav_home) {
+            HomeFragment fragment=new HomeFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
+        }
+        else if (id==R.id.nav_eye_glasses) {
+            EyeGlassesFragment fragment=new EyeGlassesFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
+        }
+        else if (id==R.id.nav_lenses) {
+            ContentLensesFragment fragment=new ContentLensesFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

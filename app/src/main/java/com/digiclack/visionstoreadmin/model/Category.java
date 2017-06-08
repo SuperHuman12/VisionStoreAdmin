@@ -15,6 +15,9 @@ public class Category {
         this.cName=cName;
         this.products=products;
     }
+    public Category(String name) {
+        this.cName=name;
+    }
 
     public ArrayList<Product> getProducts() {
         return products;
