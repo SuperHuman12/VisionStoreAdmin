@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
         mCategoryList.add(new Category(mLenseList,"Contact Lenses"));
         mCategoryList.add(new Category(mEyeList,"Eye Glasses"));
         mCategoryList.add(new Category(mGlassesList,"Sun Glasses"));
-        mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager());
+        mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager(),"home");
         mCategories.setAdapter(mAdapter);
 
         return view;
@@ -58,7 +58,5 @@ public class HomeFragment extends Fragment {
         mEyeList=new ArrayList<>();
         mGlassesList=new ArrayList<>();
     }
-    static class ViewHolder {
 
-    }
 }

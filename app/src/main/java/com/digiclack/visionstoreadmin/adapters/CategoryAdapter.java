@@ -1,6 +1,5 @@
 package com.digiclack.visionstoreadmin.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,18 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.ContentLensesFragment;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.EyeGlassesFragment;
 import com.digiclack.visionstoreadmin.ProductsActivity;
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.model.Category;
 import com.digiclack.visionstoreadmin.model.Product;
-
-import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -32,10 +27,12 @@ import java.util.ArrayList;
 public class CategoryAdapter extends ArrayAdapter<Category> {
 
     FragmentManager manager;
+    String fromWhere;
 
-    public CategoryAdapter(Context context, ArrayList<Category> list , FragmentManager manager) {
+    public CategoryAdapter(Context context, ArrayList<Category> list , FragmentManager manager,String fromWhere) {
         super(context, 0,list);
         this.manager=manager;
+        this.fromWhere=fromWhere;
     }
 
     @NonNull
@@ -54,8 +51,14 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         holder.txtName.setText(item.getcName());
         listItemView.setTag(holder);
         ArrayList<Product> products=item.getProducts();
-        ProductAdapter adapter=new ProductAdapter(getContext(),products);
-        holder.gridView.setAdapter(adapter);
+        if (products!=null) {
+            ProductAdapter adapter=new ProductAdapter(getContext(),products);
+            holder.gridView.setAdapter(adapter);
+        }
+        else {
+            Log.e("empty","empty");
+        }
+
         holder.seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,6 +70,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 else if (item.getcName().equals("Eye Glasses")) {
                     EyeGlassesFragment fragment=new EyeGlassesFragment();
                     manager.beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
+
                 }
 
                 else if (item.getcName().equals("Sun Glasses")) {
@@ -74,7 +78,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                     manager.beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();*/
                 }
                 else {
+                    String brandName=item.getcName();
                     Intent intent=new Intent(getContext(), ProductsActivity.class);
+                    intent.putExtra("BRAND",brandName);
+                    intent.putExtra("FROM",fromWhere);
                     getContext().startActivity(intent);
                 }
 

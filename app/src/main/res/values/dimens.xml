@@ -13,4 +13,5 @@
     <dimen name="marginTop_60dp">60dp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="dimen_48dp">48dp</dimen>
 </resources>

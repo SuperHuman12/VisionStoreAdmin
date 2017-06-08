@@ -46,17 +46,17 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         holder.pPrice= (TextView) gridItemView.findViewById(R.id.txt_p_price);
         holder.pImage.setImageResource(item.getpImage());
         holder.pName.setText(item.getpBrand()+" "+item.getpModelName());
-        holder.remove= (FloatingActionButton) gridItemView.findViewById(R.id.fab_remove_product);
+       /* holder.remove= (FloatingActionButton) gridItemView.findViewById(R.id.fab_remove_product);*/
         holder.pPrice.setText("Rs. "+item.getpPrice());
         gridItemView.setTag(holder);
-        holder.remove.setOnClickListener(new View.OnClickListener() {
+      /*  holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             removeProduct(position,item.getpBrand()+" "+item.getpModelName());
             }
-        });
+        });*/
 
-        return gridItemView;
+        return gridItemView; 
     }
 
     static class ViewHolder {
