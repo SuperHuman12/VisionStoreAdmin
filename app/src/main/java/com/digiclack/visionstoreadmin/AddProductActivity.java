@@ -1,5 +1,6 @@
 package com.digiclack.visionstoreadmin;
 
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,7 +46,8 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
     private StorageReference mFirebaseStorage;
     boolean mCheckImages=false;
     private int mQuantity;
-    private String mBrand,mFrom;
+    private ProgressDialog mAddingProductDialog;
+    private String mBrand,mFrom,mCategory;
     private List<Uri> mUploadedImages = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         Intent intent=getIntent();
         mBrand=intent.getStringExtra("BRAND");
         mFrom=intent.getStringExtra("FROM");
+        mCategory=intent.getStringExtra("CATEGORY");
         initComponent();
         imgOne.setOnClickListener(this);
         imgTwo.setOnClickListener(this);
@@ -90,6 +93,9 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         mDatabaseRef= Utils.getDatabase().getReference();
         mFirebaseStorage= FirebaseStorage.getInstance().getReference();
         selectImages= (Button) findViewById(R.id.product_btn_select_images);
+        mAddingProductDialog=new ProgressDialog(this);
+        mAddingProductDialog.setTitle("Loading...");
+        mAddingProductDialog.setMessage("Adding product to Firebase...");
     }
 
     @Override
@@ -138,8 +144,8 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                 }
                 else {
                     if (mCheckImages) {
+                        mAddingProductDialog.show();
                         addProductToFb();//else user will add completely new product
-                        Log.e(TAG,String.valueOf(mUploadedImages.size()));
                     }
                     else {
                         Toast.makeText(this,"Please select minimum 3 images",Toast.LENGTH_LONG).show();
@@ -189,11 +195,11 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                       /* imgOne.setImageURI(clipdata.getItemAt(i).getUri());*/
+
 
                     }
                     else if (i==1) {
-                        /*imgTwo.setImageURI(clipdata.getItemAt(i).getUri());*/
+
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), clipdata.getItemAt(i).getUri());
                             imgTwo.setImageBitmap(bitmap);
@@ -238,7 +244,9 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(this,"Please fill all fields",Toast.LENGTH_LONG).show();
         }
         else {
-            final DatabaseReference ref = mDatabaseRef.child("products").child("lenses").child(mFrom).child(mBrand).push();
+            final DatabaseReference ref = mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).push();
+            String key =ref.getKey();
+            final DatabaseReference refMarge=Utils.getDatabase().getReference().child("margeProducts").child(mCategory).child(key);
             mProductKey = ref.getKey();
             final HashMap<String, Object> list = new HashMap<>();
             for (i = 0; i < 3; i++) {
@@ -261,13 +269,14 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 byte[] data = baos.toByteArray();
-                StorageReference productImageRef = mFirebaseStorage.child("lenses/"+mFrom+"/"+mBrand+"/" + mProductKey + "/" + i + ".png");
+                StorageReference productImageRef = mFirebaseStorage.child("images").child(mProductKey).child( i + ".png");
                 UploadTask uploadTask = productImageRef.putBytes(data);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
-                        Log.e(TAG, "not uploaded" + exception);
+                        mAddingProductDialog.dismiss();
+                        Toast.makeText(AddProductActivity.this,"Faild",Toast.LENGTH_SHORT).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -283,6 +292,8 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                             }
                             Products products = new Products(edtPname.getText().toString(), edtPprice.getText().toString(), list,mQuantity);
                             ref.setValue(products);
+                            refMarge.setValue(products);
+                            mAddingProductDialog.dismiss();
                             Toast.makeText(AddProductActivity.this,"Product Added Successfully",Toast.LENGTH_LONG).show();
                         }
 

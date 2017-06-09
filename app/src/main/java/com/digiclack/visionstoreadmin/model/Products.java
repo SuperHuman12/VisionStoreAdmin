@@ -16,8 +16,6 @@ public class Products {
     String pModelName,pPrice;
     int quantity;
     HashMap<String,Object> images=new HashMap<>();
-    /*String images;*/
-
 
     Products() {
 
@@ -41,10 +39,7 @@ public class Products {
     public String getpModelName() {
         return pModelName;
     }
-/*
-    public List<Uri> getImages() {
-        return images;
-    }*/
+
 
     public HashMap<String, Object> getImages() {
         return images;

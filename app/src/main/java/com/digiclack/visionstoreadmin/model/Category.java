@@ -7,20 +7,12 @@ import java.util.ArrayList;
  */
 
 public class Category {
-    private ArrayList<Product> products;
     private String cName;
 
     public Category() {}
-    public Category(ArrayList<Product> products,String cName) {
-        this.cName=cName;
-        this.products=products;
-    }
+
     public Category(String name) {
         this.cName=name;
-    }
-
-    public ArrayList<Product> getProducts() {
-        return products;
     }
 
     public String getcName() {

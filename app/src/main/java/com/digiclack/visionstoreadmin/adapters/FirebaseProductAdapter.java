@@ -1,16 +1,28 @@
 package com.digiclack.visionstoreadmin.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.model.Products;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -23,55 +35,82 @@ import java.util.HashMap;
 
 public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
     private static final String TAG = "FirebaseProductAdapter";
-    public FirebaseProductAdapter(Activity activity, Class<Products> modelClass, int modelLayout, Query ref) {
+    private String fromWhere,category;
+    private StorageReference mFirebaseStorage;
+
+    public FirebaseProductAdapter(Activity activity, Class<Products> modelClass, int modelLayout, Query ref,String fromWhere,String category) {
         super(activity, modelClass, modelLayout, ref);
+        this.fromWhere=fromWhere;
+        this.category=category;
     }
 
     @Override
     protected void populateView(View v, Products model, int position) {
-        Products products=getItem(position);
+        final Products products=getItem(position);
+        final DatabaseReference ref=getRef(position);
+        final String key=ref.getKey();
         HashMap<String,Object> imagesUrl=new HashMap<>();
         imagesUrl=products.getImages();
         String url=imagesUrl.get("image0").toString();
-        Log.e(TAG,"run"+products.getpPrice());
         ViewHolder holder=new ViewHolder();
         holder.pImage= (ImageView) v.findViewById(R.id.grid_image_product);
         holder.pName= (TextView) v.findViewById(R.id.txt_p_name);
         holder.pPrice= (TextView) v.findViewById(R.id.txt_p_price);
-        /*holder.pImage.setImageResource(item.getpImage());*/
-       /* try {
-            URL imageOne=new URL(imagesUrl.get("image0").toString());
-            Bitmap bmp = BitmapFactory.decodeStream(imageOne.openConnection().getInputStream());
-            holder.pImage.setImageBitmap(bmp);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        holder.remove= (ImageButton) v.findViewById(R.id.fab_remove_product);
+        if (fromWhere.equals("products")) {
+            holder.remove.setVisibility(View.VISIBLE);
+        }
         // Reference to an image file in Firebase Storage
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
 
 
-// Load the image using Glide
+        // Load the image using Glide
         Glide.with(mActivity)
                 .using(new FirebaseImageLoader())
                 .load(storageReference)
                 .into(holder.pImage);
         holder.pName.setText(products.getpModelName());
-       /* holder.remove= (FloatingActionButton) gridItemView.findViewById(R.id.fab_remove_product);*/
         holder.pPrice.setText("Rs. "+products.getpPrice());
         v.setTag(holder);
-      /*  holder.remove.setOnClickListener(new View.OnClickListener() {
+        holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            removeProduct(position,item.getpBrand()+" "+item.getpModelName());
+                deleteProduct(products.getpModelName(),ref,key);
             }
-        });*/
+        });
     }
     static class ViewHolder {
         ImageView pImage;
         TextView pName;
         TextView pPrice;
-        FloatingActionButton remove;
+        ImageButton remove;
     }
+
+    public void deleteProduct(String name, final DatabaseReference reference,final String key) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
+        alertDialog.setTitle("Delete");
+        alertDialog.setMessage("Do you want to delete :"+name);
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                reference.removeValue();
+                DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("margeProducts").child(category).child(key);
+                mFirebaseStorage=FirebaseStorage.getInstance().getReference();
+                for (int i=0; i<3;i++) {
+                    StorageReference images=mFirebaseStorage.child("images").child(key).child(i+".png");
+                    images.delete();
+                }
+                ref.removeValue();
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
 }
