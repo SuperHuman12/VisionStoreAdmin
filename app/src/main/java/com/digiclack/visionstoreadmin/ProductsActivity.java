@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import com.digiclack.visionstoreadmin.adapters.FirebaseProductAdapter;
 import com.digiclack.visionstoreadmin.model.Products;
@@ -37,20 +38,23 @@ public class ProductsActivity extends AppCompatActivity {
 
         View empty_view=findViewById(R.id.empty_view);
         productGrid.setEmptyView(empty_view);
-        FirebaseProductAdapter adapter=new
+        final FirebaseProductAdapter adapter=new
                 FirebaseProductAdapter(this,Products.class,R.layout.grid_single_item,mRef,"products",mCategory);
         Log.e(TAG,mRef.toString());
         productGrid.setAdapter(adapter);
 
+        productGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String key=adapter.getRef(i).getKey();
+                intentToAddProduct("edit",key);
+            }
+        });
+
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(ProductsActivity.this,AddProductActivity.class);
-                intent.putExtra("Name","fab");
-                intent.putExtra("BRAND",mBrandName);
-                intent.putExtra("FROM",mFrom);
-                intent.putExtra("CATEGORY",mCategory);
-                startActivity(intent);
+                intentToAddProduct("add","null");
             }
         });
     }
@@ -59,6 +63,16 @@ public class ProductsActivity extends AppCompatActivity {
         fabAddProduct= (FloatingActionButton) findViewById(R.id.fab_add_product);
         productGrid= (GridView) findViewById(R.id.gridview_products_activity);
         mRef= FirebaseDatabase.getInstance().getReference().child("products").child(mCategory).child(mFrom).child(mBrandName);
+    }
+
+    public void intentToAddProduct(String editOrAdd,String key) {
+        Intent intent=new Intent(ProductsActivity.this,AddProductActivity.class);
+        intent.putExtra("KEY",key);
+        intent.putExtra("EDIT_ADD",editOrAdd);
+        intent.putExtra("BRAND",mBrandName);
+        intent.putExtra("FROM",mFrom);
+        intent.putExtra("CATEGORY",mCategory);
+        startActivity(intent);
     }
 
 }

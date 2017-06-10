@@ -1,7 +1,9 @@
 package com.digiclack.visionstoreadmin;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +21,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import com.bumptech.glide.Glide;
 import com.digiclack.visionstoreadmin.Utils.Utils;
 import com.digiclack.visionstoreadmin.model.Products;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 
 public class AddProductActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +52,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
     private String mProductKey;
     private boolean mCurrentActionEdit=false;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mRefMarge;
     private StorageReference mFirebaseStorage;
     boolean mCheckImages=false;
     private int mQuantity;
@@ -57,6 +67,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         mBrand=intent.getStringExtra("BRAND");
         mFrom=intent.getStringExtra("FROM");
         mCategory=intent.getStringExtra("CATEGORY");
+        mProductKey=intent.getStringExtra("KEY");
         initComponent();
         imgOne.setOnClickListener(this);
         imgTwo.setOnClickListener(this);
@@ -64,26 +75,52 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         btnDec.setOnClickListener(this);
         btnInc.setOnClickListener(this);
         selectImages.setOnClickListener(this);
-        String check=intent.getStringExtra("Name");
-        Bundle bundle=intent.getExtras();
+        String check=intent.getStringExtra("EDIT_ADD");
 
         //checking that user come from the intent of edit the product(product item click) or want to add new product from add click
-        if (check.equals("fab")) {
+        if (check.equals("add")) {
             setTitle("Add Product");
             mCurrentActionEdit=false;
         }
         else {
             setTitle("Edit Product");
-            mCurrentActionEdit=true;
-            imgOne.setImageResource(bundle.getInt("Image"));
-            edtPname.setText(bundle.getString("Name"));
-            edtPprice.setText(bundle.getString("Price"));
-        }
+            mCurrentActionEdit = true;
+            //displaying current selected product on view
+            final DatabaseReference refMarge=Utils.getDatabase().getReference().child("margeProducts").child(mCategory).child(mProductKey);
+            refMarge.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Products product=dataSnapshot.getValue(Products.class);
+                    edtPquantity.setText(""+product.getQuantity());
+                    edtPname.setText(""+product.getpModelName());
+                    edtPprice.setText(""+product.getpPrice());
+                    HashMap<String,Object> hashMap=product.getImages();
+                    for (int i=0; i<3; i++) {
+                        String url =hashMap.get("image"+i).toString();
+                        StorageReference ref=FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                        if (i==0) {
+                            loadImagesOnImageView(imgOne,ref);
+                        }
+                        else if (i==1) {
+                            loadImagesOnImageView(imgTwo,ref);
+                        }
+                        else if (i==2) {
+                            loadImagesOnImageView(imgThird,ref);
+                        }
 
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
     public void initComponent() {
         btnInc= (Button) findViewById(R.id.product_add_btn_inc);
-        btnDec= (Button) findViewById(R.id.product_add_btn_inc);
+        btnDec= (Button) findViewById(R.id.product_add_btn_dec);
         imgOne= (ImageView) findViewById(R.id.product_add_img_one);
         imgTwo= (ImageView) findViewById(R.id.product_add_img_two);
         imgThird= (ImageView) findViewById(R.id.product_add_img_three);
@@ -108,7 +145,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                 if (mQuantity>=0) {
                     mQuantity=mQuantity+1;
                     edtPquantity.setText(" "+mQuantity);
-            }
+                }
                 break;
             case R.id.product_add_btn_dec:
                 if (mQuantity>0)
@@ -140,12 +177,13 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         switch (id) {
             case R.id.action_save:
                 if (mCurrentActionEdit) {
-                    updateProduct(mProductKey);// if the user select the existing product product changes will be updated
+                    mAddingProductDialog.show();
+                    productModifyOrAdd("modify");// if the user select the existing product product changes will be updated
                 }
                 else {
                     if (mCheckImages) {
                         mAddingProductDialog.show();
-                        addProductToFb();//else user will add completely new product
+                        productModifyOrAdd("add");//else user will add completely new product
                     }
                     else {
                         Toast.makeText(this,"Please select minimum 3 images",Toast.LENGTH_LONG).show();
@@ -156,7 +194,8 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
 
                 return true;
             case R.id.action_delete:
-                deleteProductFromFb(mProductKey); //deleting the existing product from firebase
+                mDatabaseRef= mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).child(mProductKey);
+                deleteProductFromFb(mProductKey,mDatabaseRef); //deleting the existing product from firebase
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -233,9 +272,9 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
     }
 
     /*
-    * Adding product to firebase with the reference of product key
+    * Adding product to firebase of modifying with the reference of add or modify
     * */
-    public void addProductToFb() {
+    public void productModifyOrAdd(final String addOrModify) {
         String name=edtPname.getText().toString();
         String price=edtPprice.getText().toString();
         String quantity=edtPquantity.getText().toString();
@@ -244,10 +283,18 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(this,"Please fill all fields",Toast.LENGTH_LONG).show();
         }
         else {
-            final DatabaseReference ref = mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).push();
-            String key =ref.getKey();
-            final DatabaseReference refMarge=Utils.getDatabase().getReference().child("margeProducts").child(mCategory).child(key);
-            mProductKey = ref.getKey();
+            //final DatabaseReference ref;
+
+            if (addOrModify.equals("add")) {
+                mDatabaseRef= mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).push();
+                mProductKey = mDatabaseRef.getKey();
+                mRefMarge=mDatabaseRef.child("margeProducts").child(mCategory).child(mProductKey);
+            }
+            else if (addOrModify.equals("modify")) {
+                mDatabaseRef= mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).child(mProductKey);
+                mRefMarge=mDatabaseRef.child("margeProducts").child(mCategory).child(mProductKey);
+            }
+
             final HashMap<String, Object> list = new HashMap<>();
             for (i = 0; i < 3; i++) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -276,7 +323,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
                         mAddingProductDialog.dismiss();
-                        Toast.makeText(AddProductActivity.this,"Faild",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddProductActivity.this,"Faild to upload images",Toast.LENGTH_SHORT).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -291,10 +338,22 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                                 list.put("image" + i, mUploadedImages.get(i).toString());
                             }
                             Products products = new Products(edtPname.getText().toString(), edtPprice.getText().toString(), list,mQuantity);
-                            ref.setValue(products);
-                            refMarge.setValue(products);
-                            mAddingProductDialog.dismiss();
-                            Toast.makeText(AddProductActivity.this,"Product Added Successfully",Toast.LENGTH_LONG).show();
+                            if (addOrModify.equals("add")) {
+                                mDatabaseRef.setValue(products);
+                                mRefMarge.setValue(products);
+                                mAddingProductDialog.dismiss();
+                                Toast.makeText(AddProductActivity.this,"Product Added Successfully",Toast.LENGTH_LONG).show();
+                            }
+
+                            else if (addOrModify.equals("modify")) {
+                                HashMap<String,Object> hashMap=new HashMap<String,Object>();
+                                hashMap.put("updated",products);
+                                mDatabaseRef.updateChildren(hashMap);
+                                mRefMarge.updateChildren(hashMap);
+                                mAddingProductDialog.dismiss();
+                                Toast.makeText(AddProductActivity.this,"Product Updated Successfully",Toast.LENGTH_LONG).show();
+                            }
+
                         }
 
                     }
@@ -306,13 +365,41 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
     /*
     * removing product from firebase with the reference of product key
     * */
-    public void deleteProductFromFb(String key) {
+    public void deleteProductFromFb(final String key, final DatabaseReference reference) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AddProductActivity.this);
+        alertDialog.setTitle("Delete");
+        alertDialog.setMessage("Do you want to delete :");
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                reference.removeValue();
+                DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("margeProducts").child(mCategory).child(key);
+                mDatabaseRef=mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).child(key);
+                mFirebaseStorage=FirebaseStorage.getInstance().getReference();
+                for (int i=0; i<3;i++) {
+                    StorageReference images=mFirebaseStorage.child("images").child(key).child(i+".png");
+                    images.delete();
+                }
+                ref.removeValue();
+                mDatabaseRef.removeValue();
+                Toast.makeText(AddProductActivity.this,"Product deleted Successfully",Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
-    /*
-    * Updating the exiting product into firebase database
-    * */
-    public void updateProduct(String key) {
 
+
+    public void loadImagesOnImageView(ImageView imageView,StorageReference storageReference) {
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(storageReference)
+                .into(imageView);
     }
 }
