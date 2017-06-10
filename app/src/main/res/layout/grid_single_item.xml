@@ -49,10 +49,11 @@
             android:layout_height="30dp"
             android:background="@drawable/round_button"
             app:srcCompat="@mipmap/ic_remove"
-
+            android:layout_marginTop="5dp"
             android:layout_alignParentTop="true"
             android:scaleType="fitCenter"
             android:focusable="false"
+            android:visibility="invisible"
             android:focusableInTouchMode="false"
             android:layout_alignRight="@+id/grid_image_product"
             android:layout_alignEnd="@+id/grid_image_product" />

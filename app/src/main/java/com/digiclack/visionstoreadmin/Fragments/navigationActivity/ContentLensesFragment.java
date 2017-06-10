@@ -40,7 +40,6 @@ public class ContentLensesFragment extends Fragment {
         pager = (ViewPager) view.findViewById(R.id.pager);
 
         ArrayList<BaseFragment> pages = new ArrayList<>();
-
         TransparentLenses page1 = new TransparentLenses();
         page1.setTitle("Transparent");
         pages.add(page1);
