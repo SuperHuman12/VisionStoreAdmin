@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.ContentLensesFragment;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.EyeGlassesFragment;
+import com.digiclack.visionstoreadmin.Fragments.navigationActivity.SunGlassesFragment;
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.Utils.Utils;
 import com.digiclack.visionstoreadmin.model.Brand;
@@ -89,8 +90,8 @@ public class CategoryAdapter extends ArrayAdapter<Brand> {
                 }
 
                 else if (item.getBrandName().equals("Sun Glasses")) {
-                    /*ContentLensesFragment fragment=new ContentLensesFragment();
-                    manager.beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();*/
+                    SunGlassesFragment fragment=new SunGlassesFragment();
+                    manager.beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
                 }
 
 

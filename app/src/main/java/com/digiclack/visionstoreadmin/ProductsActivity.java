@@ -2,12 +2,19 @@ package com.digiclack.visionstoreadmin;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
 import com.digiclack.visionstoreadmin.adapters.FirebaseProductAdapter;
 import com.digiclack.visionstoreadmin.model.Products;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,6 +28,7 @@ public class ProductsActivity extends AppCompatActivity {
     private static final String TAG = "ProductsActivity";
     private String mCategory;
     Query mRef;
+    FragmentManager manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,25 @@ public class ProductsActivity extends AppCompatActivity {
                 intentToAddProduct("add","null");
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_edit_product, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                Log.e(TAG,"product activity back actionbar pressed");
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void initComponent() {

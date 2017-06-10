@@ -1,16 +1,20 @@
 package com.digiclack.visionstoreadmin.Fragments.navigationActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.digiclack.visionstoreadmin.R;
 import com.digiclack.visionstoreadmin.adapters.CategoryAdapter;
@@ -29,10 +33,12 @@ public class HomeFragment extends Fragment {
     ListView mCategories;
     CategoryAdapter mAdapter;
     ArrayList<Brand> mCategoryList;
+    boolean doubleBackToExitPressedOnce = false;
 
     //viewpager adapter initialization
     ViewPager viewPager;
     LinearLayout sliderDotspanel;
+
     private int dotscount;
     private ImageView[] dots;
     @Nullable
@@ -44,6 +50,8 @@ public class HomeFragment extends Fragment {
         mCategoryList.add(new Brand("Eye Glasses"));
         mCategoryList.add(new Brand("Sun Glasses"));
         mAdapter=new CategoryAdapter(getContext(),mCategoryList,getActivity().getSupportFragmentManager(),getActivity());
+        ViewGroup header= (ViewGroup) inflater.inflate(R.layout.header_listview,mCategories,false);
+        mCategories.addHeaderView(header,null,false);
         mCategories.setAdapter(mAdapter);
 
         //Viewpager adapter code
@@ -104,27 +112,32 @@ public class HomeFragment extends Fragment {
     public void initComponent(View view) {
         mCategories= (ListView) view.findViewById(R.id.main_list_view);
         mCategoryList=new ArrayList<>();
+
     }
 
     public class MyTimerTask extends TimerTask {
 
         @Override
         public void run() {
+            try {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                        if(viewPager.getCurrentItem() == 0){
+                            viewPager.setCurrentItem(1);
+                        } else if(viewPager.getCurrentItem() == 1){
+                            viewPager.setCurrentItem(2);
+                        } else {
+                            viewPager.setCurrentItem(0);
+                        }
 
-                    if(viewPager.getCurrentItem() == 0){
-                        viewPager.setCurrentItem(1);
-                    } else if(viewPager.getCurrentItem() == 1){
-                        viewPager.setCurrentItem(2);
-                    } else {
-                        viewPager.setCurrentItem(0);
                     }
+                });
+            } catch (Exception e){
+                Log.e("HomeFragment", e.getMessage());
+            }
 
-                }
-            });
 
         }
     }
