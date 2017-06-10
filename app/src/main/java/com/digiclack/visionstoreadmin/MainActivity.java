@@ -1,5 +1,8 @@
 package com.digiclack.visionstoreadmin;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.ContentLensesFragment;
 import com.digiclack.visionstoreadmin.Fragments.navigationActivity.EyeGlassesFragment;
@@ -92,10 +96,37 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_rate_us) {
-            // Handle the camera action
+            // Handle the rate action
+            Uri uri = Uri.parse("market://details?id=" + getApplication().getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            // To count with Play market backstack, After pressing back button,
+            // to taken back to our application, we need to add following flags to intent.
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + getApplication().getPackageName())));
+            }
         }
         else if(id == R.id.nav_contact_us) {
+            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"visionstore@gmail.com"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Write your message here");
 
+
+            emailIntent.setType("message/rfc822");
+
+            try {
+                startActivity(Intent.createChooser(emailIntent,
+                        "Send email using..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(getApplication(), "No email clients installed.", Toast.LENGTH_SHORT).show();
+            }
         }
         else if (id==R.id.nav_home) {
             HomeFragment fragment=new HomeFragment();
