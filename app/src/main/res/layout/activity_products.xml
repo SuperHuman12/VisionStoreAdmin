@@ -5,6 +5,7 @@
     android:id="@+id/activity_products"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     tools:context="com.digiclack.visionstoreadmin.ProductsActivity">
 <GridView
     android:id="@+id/gridview_products_activity"

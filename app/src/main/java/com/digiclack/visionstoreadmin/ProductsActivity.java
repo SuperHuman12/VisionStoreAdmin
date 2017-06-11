@@ -47,7 +47,7 @@ public class ProductsActivity extends AppCompatActivity {
         View empty_view=findViewById(R.id.empty_view);
         productGrid.setEmptyView(empty_view);
         final FirebaseProductAdapter adapter=new
-                FirebaseProductAdapter(this,Products.class,R.layout.grid_single_item,mRef,"products",mCategory);
+                FirebaseProductAdapter(this,Products.class,R.layout.grid_single_item2,mRef,"products",mCategory);
         Log.e(TAG,mRef.toString());
         productGrid.setAdapter(adapter);
 
@@ -70,6 +70,8 @@ public class ProductsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_edit_product, menu);
+        if (menu.findItem(R.id.action_save) != null)
+            menu.findItem(R.id.action_save).setVisible(false);
 
         return true;
     }
