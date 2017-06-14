@@ -1,6 +1,7 @@
 package com.digiclack.visionstoreadmin;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
@@ -15,13 +16,22 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.digiclack.visionstoreadmin.Utils.Utils;
 import com.digiclack.visionstoreadmin.adapters.FirebaseProductAdapter;
 import com.digiclack.visionstoreadmin.model.Products;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class ProductsActivity extends AppCompatActivity {
     FloatingActionButton fabAddProduct;
+    DatabaseReference databaseFavRating;
+    private String unique_id;
     GridView productGrid;
     private String mBrandName;
     private String mFrom;
@@ -59,12 +69,6 @@ public class ProductsActivity extends AppCompatActivity {
             }
         });
 
-        fabAddProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intentToAddProduct("add","null");
-            }
-        });
     }
 
     @Override
@@ -72,7 +76,6 @@ public class ProductsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_add_edit_product, menu);
         if (menu.findItem(R.id.action_save) != null)
             menu.findItem(R.id.action_save).setVisible(false);
-
         return true;
     }
 
@@ -84,6 +87,16 @@ public class ProductsActivity extends AppCompatActivity {
                 Log.e(TAG,"product activity back actionbar pressed");
                 onBackPressed();
                 return true;
+ /*           case R.id.action_search:
+                return true;
+
+            case R.id.action_favorite:
+
+                Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_add_to_cart:
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
     }

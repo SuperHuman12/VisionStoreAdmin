@@ -170,6 +170,13 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         MenuItem remove = menu.findItem(R.id.action_delete);
         //check if product is editing add option item to delete the product
         remove.setVisible(mCurrentActionEdit);
+        //hide actionbar icons for save and add to cart and search
+        if (menu.findItem(R.id.action_favorite) != null)
+            menu.findItem(R.id.action_favorite).setVisible(false);
+        if (menu.findItem(R.id.action_search) != null)
+            menu.findItem(R.id.action_search).setVisible(false);
+        if (menu.findItem(R.id.action_add_to_cart) != null)
+            menu.findItem(R.id.action_add_to_cart).setVisible(false);
         return true;
     }
 
@@ -188,8 +195,6 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                     } else {
                         Toast.makeText(this, "Please select minimum 3 images", Toast.LENGTH_LONG).show();
                     }
-
-
                 }
 
                 return true;
@@ -198,9 +203,11 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                 deleteProductFromFb(mProductKey, mDatabaseRef); //deleting the existing product from firebase
                 return true;
             case android.R.id.home:
-                Log.e(TAG,"product activity back actionbar pressed");
+                Log.e(TAG, "product activity back actionbar pressed");
                 onBackPressed();
                 return true;
+
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -289,10 +296,10 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
             if (addOrModify.equals("add")) {
                 mDatabaseRef = mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).push();
                 mProductKey = mDatabaseRef.getKey();
-                mRefMarge = mDatabaseRef.child("margeProducts").child(mCategory).child(mProductKey);
+                mRefMarge = Utils.getDatabase().getReference().child("margeProducts").child(mCategory).child(mProductKey);
             } else if (addOrModify.equals("modify")) {
                 mDatabaseRef = mDatabaseRef.child("products").child(mCategory).child(mFrom).child(mBrand).child(mProductKey);
-                mRefMarge = mDatabaseRef.child("margeProducts").child(mCategory).child(mProductKey);
+                mRefMarge = Utils.getDatabase().getReference().child("margeProducts").child(mCategory).child(mProductKey);
             }
 
             final HashMap<String, Object> list = new HashMap<>();

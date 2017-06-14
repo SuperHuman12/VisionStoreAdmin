@@ -56,10 +56,10 @@ public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
         holder.pImage= (ImageView) v.findViewById(R.id.grid_image_product);
         holder.pName= (TextView) v.findViewById(R.id.txt_p_name);
         holder.pPrice= (TextView) v.findViewById(R.id.txt_p_price);
-        holder.remove= (ImageButton) v.findViewById(R.id.fab_remove_product);
-        if (fromWhere.equals("products")) {
-            holder.remove.setVisibility(View.VISIBLE);
-        }
+        holder.remove= (ImageButton) v.findViewById(R.id.remove_product);
+        holder.favorite=(ImageButton) v.findViewById(R.id.add_favorite_product);
+
+
         // Reference to an image file in Firebase Storage
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
 
@@ -72,18 +72,28 @@ public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
         holder.pName.setText(products.getpModelName());
         holder.pPrice.setText("Rs. "+products.getpPrice());
         v.setTag(holder);
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteProduct(products.getpModelName(),ref,key);
-            }
-        });
+        if(fromWhere.equals("products")) {
+
+            holder.remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteProduct(products.getpModelName(), ref, key);
+                }
+            });
+            holder.favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    favoriteProduct(products.getpModelName(), ref, key);
+                }
+            });
+        }
     }
     static class ViewHolder {
         ImageView pImage;
         TextView pName;
         TextView pPrice;
         ImageButton remove;
+        ImageButton favorite;
     }
 
     public void deleteProduct(String name, final DatabaseReference reference,final String key) {
@@ -112,5 +122,8 @@ public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
         });
         alertDialog.show();
     }
+
+    public void favoriteProduct(String name, final DatabaseReference reference,final String key) {
+        Toast.makeText(mActivity, "Favorite Clicked", Toast.LENGTH_SHORT).show();    }
 
 }

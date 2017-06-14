@@ -54,7 +54,7 @@
 
 
             <ImageButton
-                android:id="@+id/fab_remove_product"
+                android:id="@+id/remove_product"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentTop="true"
@@ -64,6 +64,7 @@
                 android:scaleType="fitCenter"
                 android:background="@mipmap/ic_remove_grid_item" />
             <ImageButton
+                android:id="@+id/add_favorite_product"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentTop="true"
