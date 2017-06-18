@@ -20,6 +20,11 @@ public class Products {
     Products() {
 
     }
+    public Products(String pModelName,String pPrice) {
+        this.pPrice=pPrice;
+        this.pModelName=pModelName;
+    }
+
     public Products(String pModelName,String pPrice,HashMap<String,Object> images,int quantity) {
         this.images=images;
         this.pPrice=pPrice;

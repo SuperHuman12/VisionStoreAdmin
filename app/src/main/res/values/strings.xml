@@ -8,5 +8,6 @@
     <string name="product_price">Rs.</string>
     <string name="action_delete">Delete</string>
     <string name="action_save">Save</string>
+    <string name="title_activity_favorite">FavoriteActivity</string>
 
 </resources>

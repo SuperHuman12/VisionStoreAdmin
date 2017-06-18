@@ -160,9 +160,9 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /*
-    * inflating custom option menu for adding product or deleting product
-    * */
+        /*
+        * inflating custom option menu for adding product or deleting product
+        * */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -223,9 +223,9 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }
 
-    /*
-    * displaying images selected from gallery
-    * */
+        /*
+        * displaying images selected from gallery
+        * */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -236,7 +236,7 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
                     && (null == data.getData())) {
                 ClipData clipdata = data.getClipData();
                 for (int i = 0; i < 3; i++) {
-                    /* */
+                        /* */
                     //DO something
                     if (i == 0) {
                         try {

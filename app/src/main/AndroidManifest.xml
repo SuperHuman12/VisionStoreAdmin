@@ -26,8 +26,10 @@
             android:name=".ProductsActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".AddProductActivity"
+            android:name=".FavoriteActivity$AddProductActivity"
             android:parentActivityName=".ProductsActivity" />
+        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".Add_product"></activity>
     </application>
 
 </manifest>

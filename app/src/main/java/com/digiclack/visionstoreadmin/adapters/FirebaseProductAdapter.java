@@ -3,6 +3,7 @@ package com.digiclack.visionstoreadmin.adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -26,7 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -83,7 +86,7 @@ public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
             holder.favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    favoriteProduct(products.getpModelName(), ref, key);
+                    favoriteProduct(products);
                 }
             });
         }
@@ -123,7 +126,17 @@ public class FirebaseProductAdapter extends FirebaseListAdapter<Products> {
         alertDialog.show();
     }
 
-    public void favoriteProduct(String name, final DatabaseReference reference,final String key) {
-        Toast.makeText(mActivity, "Favorite Clicked", Toast.LENGTH_SHORT).show();    }
+    public void favoriteProduct(Products product) {
+        //Retrieve the values
+        ArrayList<Products> productsArray = new ArrayList<>();
+        productsArray.add(product);
+        String productsArrayJSON = new Gson().toJson(productsArray);
+
+        SharedPreferences prefs = mActivity.getSharedPreferences("my_prefes_key", mActivity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("my_prefes_key", productsArrayJSON);
+
+        editor.commit();
+    }
 
 }

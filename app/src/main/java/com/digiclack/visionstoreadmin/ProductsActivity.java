@@ -1,11 +1,8 @@
 package com.digiclack.visionstoreadmin;
 
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,19 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.digiclack.visionstoreadmin.Utils.Utils;
 import com.digiclack.visionstoreadmin.adapters.FirebaseProductAdapter;
 import com.digiclack.visionstoreadmin.model.Products;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 public class ProductsActivity extends AppCompatActivity {
     FloatingActionButton fabAddProduct;
@@ -87,16 +77,17 @@ public class ProductsActivity extends AppCompatActivity {
                 Log.e(TAG,"product activity back actionbar pressed");
                 onBackPressed();
                 return true;
- /*           case R.id.action_search:
+            case R.id.action_search:
                 return true;
 
             case R.id.action_favorite:
 
-                Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(),FavoriteActivity.class);
+                startActivity(i);
                 return true;
 
             case R.id.action_add_to_cart:
-                return true;*/
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
